@@ -1,16 +1,51 @@
 class Solution {
 public:
-    char _next(char &i){
-        char res = i+1;
-	if(res>'z')res='a';
-	return res;
+    int dist(char &a, char &b){
+	int l = min(a, b)-'a', r=max(a, b)-'a';
+	int w = 'z'-'a'+1;
+	return min(r-l, w-(r-l));
     }
-    char _prev(char &i){
-        char res = i-1;
-	if(res<'a')res='z';
-	return res;
-    }
+    /*
+       time: O(n*m)
+       space: O(n*m) --> can be improved to O(m) but it would need a lot of work
+       elapsed time to solve it: NA
+     * */
     int solve(string &s, int k){
+	int n = s.size();
+	vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int> (k+1,0)));
+	//base case 1: same character its a palindrome
+	for(int i = 0 ; i < n; i++){
+	   for(int l = 0; l<=k; l++){
+	       	dp[i][i][l]=1;
+	   }
+	}
+	//base case 2: first two characters are the same which is another palindrome
+	for(int i = 0 ; i+1 < n; i++){
+	   int cost = dist(s[i], s[i+1]);
+	   for(int l = 0; l <=k ;l++){
+	      dp[i][i+1][l] = (cost<=l)?2:1;
+	   }
+	}
+	for(int l = 2; l < n; l++){ //this is the offset or len of substring //     n =5  2,3,4
+           for(int i = 0; i+l < n; i++){ // 0,1,2  0,1  0
+	      int j = i+l;
+	      int cost = dist(s[i], s[j]); 
+	      for(int kk = 0; kk <= k; kk++){
+		  if(cost<=kk){
+		     dp[i][j][kk] = max(
+				     dp[i+1][j-1][kk-cost]+2, 
+				     dp[i+1][j-1][kk]
+				     );
+		  }
+		  dp[i][j][kk] = max({
+				     dp[i][j][kk],
+				     dp[i+1][j][kk],
+				     dp[i][j-1][kk],
+				     });
+	      }
+	   }
+	}
+	return dp[0].back().back();
     }
     int longestPalindromicSubsequence(string s, int k) {
 	return solve(s, k);

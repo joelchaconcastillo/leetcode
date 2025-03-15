@@ -5,7 +5,7 @@ public:
        space: O(n*n), can be optimized to O(n)
        elapsed time to solve: >30 min.
      * */
-    int solve(string &s){
+    int solve2(string &s){
 	  auto t = s;
 	  reverse(t.begin(), t.end());
 	  int n = t.size();
@@ -22,6 +22,38 @@ public:
 	  }
 	  return dp.back().back();
     }
+    int solve(string &s){
+	int n = s.size();
+	vector<vector<int> > dp(n, vector<int> (n, 0));
+	//base case 1: diagonal
+	for(int i = 0 ; i < n ;i++) dp[i][i]=1;
+	//base case 2: sup diagonal two equal characters
+	for(int i = 0; i+1 < n; i++) dp[i][i+1] = s[i]==s[i+1]?2:1;
+	//main transitions...
+/*	for(int i = n - 2; i >=0; i--){ // n=5, 3,2,1,0 // this loop can be from bottom to top
+	   for(int j = i+2; j < n; j++){ // 3,4 | 2,3,4 | 1,2,3,4 | 0,1,2,3,4
+	      if(s[i]==s[j]) dp[i][j] = dp[i+1][j-1]+2; // expand to both directions
+	      else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);//max  len of either excluding i or j
+	   }
+	}*/
+	for(int jj = 2; jj < n; jj++){ // offset of the start value
+	   for(int i = 0; i+jj < n; i++){ // move on each row per offset
+	      int j = i+jj; // compute the column given the offset and the row
+	      if(s[i]==s[j]) dp[i][j] = dp[i+1][j-1]+2; // expand to both directions
+	      else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);//max  len of either excluding i or j
+	   }
+	}
+	return dp[0].back();
+    }
+    /*
+        0 1 2 3 4
+     0  x x 
+     1    x x 
+     2      x x
+     3        x x
+     4          x
+    
+     * */
     int longestPalindromeSubseq(string s) {
 	return solve(s);
     }
