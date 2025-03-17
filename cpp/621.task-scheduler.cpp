@@ -1,5 +1,16 @@
 class Solution {
 public:
+    int solve_optimized(vector<char> &tasks, int n){
+	 vector<int> freq(50, 0);
+	 for(auto i:tasks) freq[i-'A']++;
+	 sort(freq.begin(), freq.end());
+	 int max_frequence = freq.back()-1, max_idles = n*max_frequence;
+	 //max_frequence --> A _ _ A --> max_frequence = 1
+	 for(auto item:freq){
+	    max_idles -= min(max_frequence, item);//locate item on those iddles
+	 }
+	 return tasks.size() + max(0, max_idles);
+    }
     /*
         time: O(n log t) where n is the highest frequency and t cooling period, therefore O( n ), since t is a constant 
         space: O(n log n)
