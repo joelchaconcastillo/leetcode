@@ -1,0 +1,25 @@
+class Solution {
+public:
+    double solve(vector<vector<int> > &classes, int extraStudents){
+	   priority_queue<tuple<double, double, double>>pq;//delta num den
+	   for(auto i:classes){
+	       pq.push({ (i[1]-i[0]+0.0) /(i[1]*(i[1]+1.0)) ,i[0], i[1]});
+	   }
+	   while(extraStudents){
+		auto [delta, num, den] = pq.top(); pq.pop();
+	        pq.push({ (den - num) / (den * (den + 1.0)) ,num+1.0, den+1.0});
+		extraStudents--;
+
+	   }
+	   int n = classes.size();
+	   double res = 0.0, weight = 1.0/n;
+	   while(!pq.empty()){
+		auto [delta, num, del] = pq.top(); pq.pop();
+		res += num*weight/del;
+	   }
+	   return res;
+    }
+    double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
+	   return solve(classes, extraStudents);
+    }
+};
