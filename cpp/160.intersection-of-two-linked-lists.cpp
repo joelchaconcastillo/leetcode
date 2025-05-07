@@ -44,7 +44,17 @@ public:
 	   }
 	   return res;
     }
+    ListNode * solveOptimal(ListNode *headA, ListNode *headB){
+	    auto itA = headA, itB = headB;
+	    while(itA != itB){
+		    if(itA)itA = itA->next;
+		    else itA = headB;
+		    if(itB)itB = itB->next;
+		    else itB = headA;
+	    }
+	    return itA;
+    }
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        return solve(headA, headB);
+        return solveOptimal(headA, headB);
     }
 };
