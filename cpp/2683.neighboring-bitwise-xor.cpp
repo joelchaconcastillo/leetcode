@@ -2,21 +2,28 @@ class Solution {
 public:
     bool solve(vector<int> &y){
 	 int n = y.size();
-
-	 for(int i = n-1; i>=0; i--){
-
+	 vector<int> x1(n);
+	 x1.back()=0;
+	 for(int i = n-2; i>=0; i--){
+	    x1[i] = x1[i+1]^y[i]; 
 	 }
+	 bool hassol1 = true;
+	 for(int i = 0 ; i < n; i++){
+	    if( (x1[i]^x1[(i+1)%n]) != y[i]) hassol1=false;
+	 }
+	 return hassol1;
     }
     bool doesValidArrayExist(vector<int>& derived) {
 	 return solve(derived);
     }
 };
-/*
- 
- 1 1 0
- 1 0 1
- 0 1 1
- 0 0 0
+/*xor?
+ f[i] f[i+1] y[i]
+   ?     *     t
+   1     1     0   
+   1     0     1  
+   0     1     1  
+   0     0     0
 
 
  y[i] = f[i] ^ f[i+1]
