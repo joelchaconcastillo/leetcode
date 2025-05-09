@@ -35,7 +35,7 @@ public:
 	     if(isPrime(u))continue;
 	     if( m == u) return wu;
 	     for(auto v:edges(u)){
-		 int next_dist = wu+v;
+		 int next_dist = dist[u]+v;
 		 if(isPrime(v)) continue;
 		 if(!dist.count(v))dist[v]=INT_MAX;
 		 if(next_dist >= dist[v]) continue;
