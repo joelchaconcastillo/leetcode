@@ -1,31 +1,28 @@
 class Solution {
 public:
-    /*
-        time: O(n)
-        space: O(1)
-     * */
-    bool solve(vector<int> &nums){
-	    int n = nums.size();
-	    if(n<=1)return true;
-	    int maxv = 0;
-	    for(int i = 0 ; i+1 < n; i++){
-	       maxv = max(maxv-1, nums[i]);
-	       if(maxv==0)return false;
+    bool solve2(vector<int> &nums){
+	 int n = nums.size(), maxDist = 0;
+	 if(n==1)return true;
+	 for(int i = 0 ; i+1 <n ;i++){
+	    maxDist = max(maxDist-1, nums[i]);
+	    if(maxDist == 0)return false;
+	 }
+	 return true;
+    }
+    bool solve1(vector<int> &nums){
+	 int n = nums.size();
+	 vector<bool> dp(n, false);
+	 dp[0] = true;
+	 for(int i = 0 ; i <n ;i++){
+	    if(!dp[i])continue;
+	    for(int j = i; j <= min(n-1, i+nums[i]); j++){
+		 dp[j]=true;
 	    }
-	    return true;
+	 }
+	 return dp.back();
     }
     bool canJump(vector<int>& nums) {
-	 return solve(nums);
+	 return solve2(nums);
+	 return solve1(nums);
     }
 };
-/*
- *
-   max: 1
-            x
-      2 3 1 1 4
-
-   max: 1
-          x
-      3 2 1 0 4
-
- * */
