@@ -1,11 +1,14 @@
 class Solution {
 public:
+//Input: nums = [ 2, 3, 1, 1, 4]
+//                           i
+//     gas           1
+//Output: true
     bool solve2(vector<int> &nums){
-	 int n = nums.size(), maxDist = 0;
-	 if(n==1)return true;
-	 for(int i = 0 ; i+1 <n ;i++){
-	    maxDist = max(maxDist-1, nums[i]);
-	    if(maxDist == 0)return false;
+	 int gas = 1;
+	 for(int i = 0 ; i < nums.size(); i++){
+	     if(gas == 0)return false;
+	     gas = max(nums[i], gas-1);
 	 }
 	 return true;
     }

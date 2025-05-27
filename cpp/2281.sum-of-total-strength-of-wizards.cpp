@@ -43,6 +43,34 @@ public:
 	}
 	return res%MOD;
     }
+    int solve3(vector<int> &s){
+	int n = s.size();
+	vector<long long> prefix(n+1, 0);
+	for(int i = 1; i <= n; i++) prefix[i] = prefix[i-1]+s[i-1];
+	vector<long long> prefix2(n+1, 0);
+	for(int i = 1; i <= n; i++)prefix2[i] = prefix2[i-1]+prefix[i-1];
+	vector<int> left(n, -1), st;
+	for(int i = 0; i < n; i++){
+	   while(!st.empty() && s[st.back()] >= s[i])st.pop_back();
+	   if(!st.empty())left[i] = st.back();
+	   st.push_back(i);
+	}
+	vector<int> right(n, n); st.clear();
+	for(int i = n-1; i>=0; i--){
+	   while(!st.empty() && s[st.back()] > s[i])st.pop_back();
+	   if(!st.empty()) right[i] = st.back();
+	   st.push_back(i);
+	}
+	long long res = 0;
+	for(int i = 0; i <n; i++){
+	   long long _segment_a = (prefix2[right[i]]-prefix2[i])%MOD;
+	   _segment_a = (_segment_a*(i-left[i]))%MOD;
+	   long long _segment_b = (prefix2[i]-prefix2[left[i]])%MOD;
+	   _segment_b = (_segment_b*(right[i]-i))%MOD;
+	   res += ((_segment_a+MOD-_segment_b)%MOD)*s[i]%MOD;
+	}
+	return res%MOD;
+    }
     int totalStrength(vector<int>& strength) {
 	return solve2(strength);
     }
