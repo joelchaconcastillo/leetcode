@@ -26,7 +26,24 @@ public:
 	}
 	return res;
     }
+    int solve2(vector<vector<int> > &matrix){
+	int n = matrix.size(), m = matrix[0].size(), res = 0;
+	vector<vector<int> > dp(n, vector<int> (m,0));
+	dp[0][0]=1;
+	for(int i = 1 ; i < n; i++) dp[i][0] = (matrix[i][0]>matrix[i-1][0])?dp[i-1][0]+1:1;
+	for(int j = 1 ; j < m; j++) dp[0][j] = (matrix[0][j]>matrix[0][j-1])?dp[0][j-1]+1:1;
+	for(int i = 1; i <n ; i++){
+	   for(int j = 1; j <m; j++){
+	       dp[i][j] = 1;
+	       if(matrix[i][j] > matrix[i-1][j]) dp[i][j] = dp[i-1][j]+1;
+	       if(matrix[i][j] > matrix[i][j-1]) dp[i][j] = max(dp[i][j], dp[i][j-1]+1);
+	       res = max(dp[i][j], res);
+	   }
+	}
+	return res;
+    }
     int longestIncreasingPath(vector<vector<int>>& matrix) {
 	return solve1(matrix);
+	return solve2(matrix);
     }
 };
