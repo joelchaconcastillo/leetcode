@@ -15,23 +15,26 @@ public:
     Node * solve(Node *root, Node *leaf){
 	    Node *prev = NULL, *current = leaf, *next = leaf->parent;
 	    while(current){
-		    if(current->left && next) current->right = current->left;
-		    if(next) current->left = next;
-		    if(next && next->left == current) next->left = NULL;
-		    if(next && next->right == current) next->right = NULL;
-		    current->parent = prev;
+		    if(current->left && next) current->right = current->left;//check that prev node is a left branch, if it is the case then point the right one to it
+		    if(next) current->left = next; //redirect left branch to parent "re-parent"
+		    //next two lines will clean the tree a it is being processed
+		    if(next && next->left == current) next->left = NULL; //if this is the left branch then redirect left, in this way we avoid loops
+		    if(next && next->right == current) next->right = NULL;//the same the before but in this case next will be a right 
+		    current->parent = prev;//reparent it
 		    prev = current;
 		    current=next;
-		    if(next) next = next->parent;
+		    if(next) next = next->parent;//update next only if current is not the root
 	    }
 	    return leaf;
     }
     Node * solve2(Node *root, Node *leaf){
-	    Node *prev = NULL, *current = leaf;//current->7
-	    while(current){//current = 7
-		  auto left = current->left;//left = NULL
-		  auto parent = current->parent; // parent = 2
-		  if(prev != left) current->right = left;
+	    Node *prev = NULL, *current = leaf;
+	    while(current){
+	          if(current->left && current->parent)current->right = current->left;//make sure that it is an intermediate node
+		  auto left = current->left;
+		  auto parent = current->parent; // 
+		  if(current->parent && current->parent->left == current) current->parent->left = NULL;
+		  if(current->parent && current->parent->right == current) current->parent->right = NULL;
 	  current->parent = prev;
 		  current->left = parent; // 
 		  prev = current;
@@ -40,7 +43,7 @@ public:
 	    return leaf;
     }
     Node* flipBinaryTree(Node* root, Node * leaf) {
-	    return solve2(root, leaf);
-//	    return solve(root, leaf);
+//	    return solve2(root, leaf);
+	    return solve(root, leaf);
     }
 };
