@@ -43,7 +43,6 @@ public:
 	    return leaf;
     }
     Node* flipBinaryTree(Node* root, Node * leaf) {
-//	    return solve2(root, leaf);
 	    return solve(root, leaf);
     }
 };
