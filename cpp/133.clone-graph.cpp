@@ -19,65 +19,24 @@ public:
 };
 */
 
-/*
- *  time: O(N+E)
- *  space: O(N+E)
- * */
 class Solution {
 public:
-    unordered_map<int, Node*> visited;
-    void hard_create(int id){
-	    if(!visited[id]) visited[id] = new Node(id);
-    }
-    Node * solveBFS(Node *node){
-	 if(!node)return node;
-	 queue<Node*> q;
-	 q.push(node);
-	 unordered_set<int>marked;
-	 while(!q.empty()){
-	    auto current = q.front(); q.pop();
-	    if(marked.count(current->val))continue;
-	    marked.insert(current->val);
-	    hard_create(current->val);
-	    for(auto _next : current->neighbors){
-	       hard_create(_next->val);
-	       visited[current->val]->neighbors.push_back(visited[_next->val]);
-	       q.push(_next);
+    void dfs(Node* current, unordered_map<int, pair<Node*, Node*>> &new_nodes){
+	    if(new_nodes.count(current->val)) return;
+	    new_nodes[current->val] = {new Node(current->val), current};
+	    for(auto _to:current->neighbors){
+		    dfs(_to, new_nodes);
 	    }
-	 }
-	 return visited[node->val];
-    }
-    unordered_map<int, Node*> marked;
-    Node * solveDFS(Node *node){
-	if(!node) return node;
-	if(marked.count(node->val))return marked[node->val];
-	Node *current = new Node(node->val);
-	marked[node->val]=current;
-	for(auto _next: node->neighbors){
-	    current->neighbors.push_back(solveDFS(_next));
-	}
-	return current;
     }
     Node* cloneGraph(Node* node) {
-//	 return solveBFS(node);
-	 return solveDFS(node);
+	    if(!node)return node;
+	    unordered_map<int, pair<Node*, Node*> > new_nodes;
+	    dfs(node, new_nodes);
+	    for(auto &[val, pp_new_source]:new_nodes){
+		    for(auto _to:pp_new_source.second->neighbors){
+			    pp_new_source.first->neighbors.push_back(new_nodes[_to->val].first);
+		    }
+	    }
+	    return new_nodes[node->val].first;
     }
 };
-
-/*
- 
-   1 ----------2
-   |           |
-   |           |
-   4 ----------3
-
-   1,  2,4   3
-   1-2
-   1-4
-   2-1
-   2-3
-   4-1
-   4-3
-   3-2
-   3-4
- * */
