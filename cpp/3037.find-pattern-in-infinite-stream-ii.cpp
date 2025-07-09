@@ -8,6 +8,8 @@
  */
 class Solution {
 public:
+    ///////////
+    // KMP algorithm
     vector<int> pre_process_KMP(vector<int> &pattern){
 	    int j = 0, n = pattern.size();
 	    vector<int> pref(n, 0);
@@ -34,6 +36,7 @@ public:
 	    }
 	    return -1;
     }
+    /////////////////
     //Rabin-Karp algorithm
     const long long  MOD = 1e9+7;
     const long long BASE = 30;
