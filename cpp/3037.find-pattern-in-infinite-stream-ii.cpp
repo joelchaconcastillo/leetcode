@@ -38,30 +38,28 @@ public:
     }
     /////////////////
     //Rabin-Karp algorithm
-    const long long  MOD = 1e9+7;
-    const long long BASE = 30;
+    long long MOD = 1e9+7, BASE = 30;
     long long compute_hash(deque<int> &dq){
-	    long long hash_val = 0;
-	    for(int i = 0 ; i < dq.size(); i++){
-		    hash_val = (hash_val*BASE + dq[i])%MOD;
-	    }
-	    return hash_val;
+	    long long hash = 0;
+	    for(int i = 0 ; i < dq.size(); i++)
+		    hash = ( hash*BASE + dq[i])%MOD;
+	    return hash;
     }
     int solve2(InfiniteStream *stream, vector<int> &pattern){
 	    int n = pattern.size();
-	    deque<int> pattern_deque(pattern.begin(), pattern.end());
-	    deque<int> window_deque;
-	    for(int i = 0 ; i < n; i++) window_deque.push_back(stream->next());
-	    long long pattern_hash = compute_hash(pattern_deque);
-	    long long window_hash = compute_hash(window_deque);
+	    deque<int> pattern_dq(pattern.begin(), pattern.end());
+	    deque<int> window_dq;
+	    for(int i = 0 ;i < n; i++) window_dq.push_back(stream->next());
+	    long long hash_window = compute_hash(window_dq);
+	    long long hash_pattern = compute_hash(pattern_dq);
 	    long long power = 1;
-	    for(int i = 0 ; i+1<n; i++) power =(power*BASE)%MOD;
-	    for(int i = 0; i < 1e6; i++){
-		    if(pattern_hash == window_hash && pattern_deque == window_deque) return i;
-		    int prev_val = window_deque.front(); window_deque.pop_front();
-		    int next_val = stream->next(); window_deque.push_back(next_val);
-		    window_hash = (window_hash -  prev_val*power %MOD + MOD)%MOD;
-		    window_hash = (window_hash*BASE + next_val)%MOD;
+	    for(int i = 0 ; i+1 < n; i++) power = (power*BASE)%MOD;
+	    for(int i = 0 ; i < 1e6; i++){
+		    if(hash_window == hash_pattern && pattern_dq == window_dq) return i;
+		    int prev_val = window_dq.front(); window_dq.pop_front();
+		    int next_val = stream->next(); window_dq.push_back(next_val);
+		    hash_window = (hash_window - prev_val*power % MOD +MOD)%MOD;
+		    hash_window = (hash_window*BASE + next_val)%MOD;
 	    }
 	    return -1;
     }
