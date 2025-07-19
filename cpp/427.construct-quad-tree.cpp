@@ -40,29 +40,32 @@ public:
 
 class Solution {
 public:
-    bool allSame(vector<vector<int> > &grid, int x1, int y1, int len){
-	    for(int i = x1; i < x1+len; i++){
-		    for(int j = y1; j < y1+len; j++){
-			    if(grid[i][j]!=grid[x1][y1]){
-				    return false;
-			    }
+    bool allEqual(vector<vector<int> > &grid, int row, int col, int len){
+	    bool same = true;
+	    for(int i = row; i < row+len; i++){
+		    for(int j = col; j < col+len; j++){
+			    if(grid[i][j] != grid[row][col]) return false;
 		    }
 	    }
-	    return true;
+	    return same;
     }
-    Node* solve(vector<vector<int> > &grid, int x1, int y1, int len){
-	    if(allSame(grid, x1, y1, len)){
-		    return new Node(grid[x1][y1], true);
+    Node *buildQT(vector<vector<int> > &grid, int row, int col, int len){
+	    if(allEqual(grid, row, col, len)){
+		    return new Node(grid[row][col], true);
 	    }else{
-		    Node *root = new Node(false, false);
-		    root->topLeft= solve(grid, x1, y1, len/2);
-		    root->topRight= solve(grid, x1, y1+len/2, len/2);
-		    root->bottomLeft= solve(grid, x1+len/2, y1, len/2);
-		    root->bottomRight= solve(grid, x1+len/2, y1+len/2, len/2);
-		    return root;
+		    Node * current = new Node(false, false);
+		    current->topLeft = buildQT(grid, row, col, len/2);
+		    current->topRight = buildQT(grid,row, col+len/2, len/2 );
+		    current->bottomLeft = buildQT(grid, row+len/2, col, len/2);
+		    current->bottomRight = buildQT(grid,row+len/2, col+len/2, len/2); 
+		    return current;
 	    }
     }
+    Node *solve(vector<vector<int> > &grid){
+	    int n = grid.size(), m = grid[0].size();
+	    return buildQT(grid, 0, 0, n);
+    }
     Node* construct(vector<vector<int>>& grid) {
-           return solve(grid, 0, 0, grid.size());
+	    return solve(grid);
     }
 };
