@@ -21,22 +21,20 @@ public:
 
 class Solution {
 public:
-    void dfs(Node* current, unordered_map<int, pair<Node*, Node*>> &new_nodes){
-	    if(new_nodes.count(current->val)) return;
-	    new_nodes[current->val] = {new Node(current->val), current};
-	    for(auto _to:current->neighbors){
-		    dfs(_to, new_nodes);
+    Node *dfs(Node *current, unordered_map<Node*, Node*> &visited){
+	    if(!current) return NULL;
+	    if(visited.count(current))return visited[current];
+	    visited[current] = new Node(current->val);
+	    for(auto to:current->neighbors){
+		    visited[current]->neighbors.push_back(dfs(to, visited));
 	    }
+	    return visited[current];
+    }
+    Node* solve(Node *node){
+	    unordered_map<Node *, Node *> visited;
+	    return dfs(node, visited);
     }
     Node* cloneGraph(Node* node) {
-	    if(!node)return node;
-	    unordered_map<int, pair<Node*, Node*> > new_nodes;
-	    dfs(node, new_nodes);
-	    for(auto &[val, pp_new_source]:new_nodes){
-		    for(auto _to:pp_new_source.second->neighbors){
-			    pp_new_source.first->neighbors.push_back(new_nodes[_to->val].first);
-		    }
-	    }
-	    return new_nodes[node->val].first;
+	    return solve(node);
     }
 };
