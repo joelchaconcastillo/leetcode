@@ -11,13 +11,19 @@
  */
 class Solution {
 public:
-    bool dfs(TreeNode *current){
-	    if(!current)return true;
-	    if(current->left && current->left->val != current->val)return false;
-	    if(current->right && current->right->val != current->val)return false;
-	    return dfs(current->left) && dfs(current->right);
+    void dfs(TreeNode* current, vector<int> &res){
+	    if(!current)return;
+	    if(!current->left && !current->right){
+		    res.push_back(current->val);
+		    return;
+	    }
+	    dfs(current->left, res);
+	    dfs(current->right, res);
     }
-    bool isUnivalTree(TreeNode* root) {
-	    return dfs(root);
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+	    vector<int> res1, res2;
+	    dfs(root1, res1);
+	    dfs(root2, res2);
+	    return res1==res2;
     }
 };
