@@ -67,7 +67,37 @@ public:
 	    return -1;
 
     }
+    int solve3(vector<vector<int>>& routes, int source, int target) {
+	    if(source == target)return 0;
+	    unordered_map<int, vector<int> > stopToRoute;
+	    int n = routes.size();
+	    for(int i = 0 ;i  < n; i++){
+		    for(auto stop:routes[i]) stopToRoute[stop].push_back(i);
+	    }
+	    queue<int> q;
+	    for(auto route:stopToRoute[source])q.push(route);
+	    int res = 0;
+	    unordered_set<int> route_visited;
+	    while(!q.empty()){
+		    auto _sz = q.size();
+		    res++;
+		    while(_sz--){
+		        auto route = q.front(); q.pop();
+			if(route_visited.count(route))continue;
+			route_visited.insert(route);
+		        for(auto stop:routes[route]){
+				if(stop == target)return res;
+		                for(auto to_route:stopToRoute[stop]){
+					if(route_visited.count(to_route))continue;
+					q.push(to_route);
+		                }
+		        }
+		    }
+	    }
+	    return -1;
+    }
     int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+	    return solve3(routes, source, target);
 	    return solve_optimized(routes, source, target);
 	    return solve(routes, source, target);
     }
