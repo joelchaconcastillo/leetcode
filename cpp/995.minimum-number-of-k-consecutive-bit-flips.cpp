@@ -1,21 +1,22 @@
 class Solution {
 public:
-    // 1 0 1 0 1 k =3
-    // 1 1 0 1 1
-    // 1 1 1 0 0
     int solve(vector<int> &nums, int k){
-	    int n = nums.size(), res = 0;
+	    int n = nums.size();
+	    vector<int> sums(n+1,0);
+	    int current = 0, res = 0;
 	    for(int i = 0; i < n; i++){
-		    if( nums[i] == 0){
-			    for(int j = 0; j < k && i+j < n; j++){
-				    nums[i+j] ^= nums[i+j];
-				    res++;
-			    }
+		    int val = nums[i];
+		    current += sums[i];
+		    if(current%2==1)val = 1-val;
+		    if(val==0 && i+k-1<n){
+		       current++;
+		       if(i+k<n) sums[i+k]--;
+		       val=1;
+		       res++;
 		    }
+		    nums[i]=val;
 	    }
-	    for(int i = 0 ; i < n; i++){
-		    if(nums[i]==0)return -1;
-	    }
+	    for(auto i:nums)if(i==0)return -1;
 	    return res;
     }
     int minKBitFlips(vector<int>& nums, int k) {
