@@ -12,7 +12,32 @@ public:
 	}
 	return res;
     }
+    int solve2(vector<int> &prices){
+	int minv = INT_MAX, res = 0;
+	for(auto p:prices){
+	   minv = min(minv, p);
+	   res = max(res, p-minv);
+	}
+	return res;
+    }
     int maxProfit(vector<int>& prices) {
+	   return solve2(prices);
 	   return solve(prices);
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -96,7 +96,90 @@ public:
 	    }
 	    return -1;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    int solve4(vector<vector<int>>& routes, int source, int target) {
+	    if(source==target)return 0;
+	    unordered_map<int, vector<int> > node2route;
+	    int n = routes.size();
+	    for(int i = 0 ; i < n; i++){
+		    for(auto node:routes[i]){
+			    node2route[node].push_back(i);
+		    }
+	    }
+	    queue<int> q;
+	    for(auto route:node2route[source]) q.push(route);
+	    int res = 0;
+	    unordered_set<int> visited_node, visited_route;
+	    while(!q.empty()){
+		    int sz = q.size();
+		    res++;
+		    while(sz--){
+		        auto current_route = q.front(); q.pop();
+		        if(visited_route.count(current_route))continue;
+			visited_route.insert(current_route);
+			for(auto next_node:routes[current_route]){
+				if(visited_node.count(next_node))continue;
+				if(next_node == target) return res;
+				for(auto next_route:node2route[next_node]){
+					if(visited_route.count(next_route))continue;
+					q.push(next_route);
+				}
+			}
+		    }
+	    }
+	    return -1;
+    }
+    int solve5(vector<vector<int>>& routes, int source, int target) {
+        if (source == target) return 0;
+	unordered_map<int, vector<int>> stop2routes;
+	for(int i = 0 ;i < routes.size(); i++){
+		for(auto stop:routes[i])stop2routes[stop].push_back(i);
+	}
+
+	queue<tuple<int, int, int> > q;
+	q.push({source, 0, -1});
+	unordered_set<int> visited_stops, visited_routes;
+	while(!q.empty()){
+		auto [stop, jumps, prev_route] = q.front(); q.pop();
+		if(visited_stops.count(stop))continue;
+		visited_stops.insert(stop);
+		if(stop == target) return jumps;
+		for(auto next_route: stop2routes[stop]){
+			if(visited_routes.count(next_route))continue;
+			for(auto next_stop:routes[next_route]){
+				if(visited_stops.count(next_stop))continue;
+				int next_jump = jumps+ (prev_route != next_route);
+				q.push({next_stop, next_jump, next_route});
+			}
+			visited_routes.insert(next_route);
+		}
+	}
+	return -1;
+    }
     int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+	    return solve5(routes, source, target);
+	    return solve4(routes, source, target);
 	    return solve3(routes, source, target);
 	    return solve_optimized(routes, source, target);
 	    return solve(routes, source, target);
